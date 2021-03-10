@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +19,8 @@ public class CarController : MonoBehaviour
 
     [SerializeField] private Transform carFront;
     private int m_IntLayer;
+
+    [SerializeField] private Animator _animator;
     public enum CarState
     {
         None=-1,
@@ -39,21 +42,19 @@ public class CarController : MonoBehaviour
         targetWindow = driveThruWindow.transform;
         targetExit = GameObject.FindGameObjectWithTag("CarExit").transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
-#if DEBUG_CC
-        print("Start: this.GO.ID=" + this.gameObject.GetInstanceID());
-#endif
 
         //
         carState = CarState.Entered;
         FSMCar();
+        
+        
+        
 
     }
 
     void FSMCar()
     {
-#if DEBUG_CC
-        print("CC.FSMCar:state="+carState+",ID="+this.gameObject.GetInstanceID());
-#endif
+
         switch (carState)
         {
             case CarState.None: //do nothing - shouldn't happen
@@ -75,19 +76,7 @@ public class CarController : MonoBehaviour
     }
     void DoEntered()
     {
-//        //queueManager = driveThruWindow.GetComponent<QueueManager>();
-//        GameObject goLast = GameObject.FindGameObjectWithTag("DriveThruWindow").GetComponent<QueueManager>().Last();
-//        if (goLast)
-//        {
-//#if DEBUG_CC
-//            print("CC.DoEntered: goLast.ID=" + goLast.GetInstanceID());
-//#endif
-//            targetCar = goLast.transform;
-//        }
-//        else
-//        {
-//            targetCar = targetWindow;
-//        }
+
 
         targetCar = targetWindow;
 
@@ -99,12 +88,14 @@ public class CarController : MonoBehaviour
     }
     void DoInService()
     {
+        Debug.Log("Stopped: " + navMeshAgent.isStopped);
         navMeshAgent.isStopped = true;
-        //this.transform.position = targetWindow.position;
-        //this.transform.rotation = Quaternion.identity;
+        navMeshAgent.velocity = Vector3.zero;
     }
     void DoServiced()
     {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None;
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(targetExit.position);
     }
@@ -116,24 +107,28 @@ public class CarController : MonoBehaviour
     
     public void SetInService(bool value)
     {
-        //Chaneg        InService = value;
-        //if (InService)
-        //{
-        //    navMeshAgent.isStopped=true;
-        //}
+        //Chaneg
+        InService = value;
     }
+    
     public void ExitService(Transform target)
     {
-        //this.SetInService(false);
+        this.SetInService(false);
         
         queueManager.PopFirst();
         ChangeState(CarState.Serviced);
-        //targetExit = target;
-
-        //navMeshAgent.SetDestination(target.position);
-        //navMeshAgent.isStopped = false;
+        targetExit = target;
+        navMeshAgent.isStopped = false;
+        navMeshAgent.speed = 5;
+        navMeshAgent.SetDestination(target.position);
     }
-    
+
+
+    private void Update()
+    {
+        _animator.SetBool("isMoving", !navMeshAgent.isStopped);
+    }
+
     public void FixedUpdate()
     {
 
@@ -141,80 +136,63 @@ public class CarController : MonoBehaviour
         {
             if (targetCar == null)
             {
-#if DEBUG_CC
-            print("***** CarController.FixedUpdate:targetCar.pos=" + targetCar.position);
-#endif
                 targetCar = targetWindow;
                 //navMeshAgent.SetDestination(targetCar.position);
                 navMeshAgent.isStopped = false;
             }
         }
-
-        m_IntLayer = 1 << LayerMask.NameToLayer("DriveThruWindow");
-        RaycastHit hit;
-        if (Physics.Linecast(carFront.position, transform.TransformDirection(Vector3.forward), out hit, m_IntLayer))
-        {
-            Debug.DrawRay(carFront.position, transform.TransformDirection(Vector3.forward) * 10, Color.blue);
-            Debug.Log("Did hit");
-            //navMeshAgent.speed = 0;
-        }
-        else
-        {
-            Debug.DrawRay(carFront.position, transform.TransformDirection(Vector3.forward) * 10, Color.cyan);
-            Debug.Log("Did not hit");
-            //navMeshAgent.speed = 2;
-        }
-
-        
-
     }
-
+   
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.LogFormat("CarController(this={0}).OnTriggerEnter:other={1}",this.gameObject.GetInstanceID(), other.gameObject.tag);
         if (other.gameObject.CompareTag("Car"))
         {
-            //navMeshAgent.isStopped = true;
+            if (other.gameObject.GetComponent<NavMeshAgent>().isStopped)
+            {
+                navMeshAgent.isStopped = true;
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+            }
         }
-        else if (other.gameObject.CompareTag("DriveThruWindow"))
-        {
-            ChangeState(CarState.InService);
-            //SetInService(true);
-        }
+        // else if (other.gameObject.CompareTag("DriveThruWindow"))
+        // {
+        //     //ChangeState(CarState.InService);
+        //     //SetInService(true);
+        // }
         else if (other.gameObject.CompareTag("CarExit"))
         {
             Destroy(this.gameObject);
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Car"))
+        {
+            if (other.gameObject.CompareTag("Car"))
+            {
+                if (other.gameObject.GetComponent<NavMeshAgent>().isStopped)
+                {
+                    navMeshAgent.isStopped = true;
+                    Rigidbody rb = GetComponent<Rigidbody>();
+                    rb.constraints = RigidbodyConstraints.FreezeAll;
+                }
+            }
+        }
+    }
+
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Car"))
         {
-            //navMeshAgent.isStopped = false;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.constraints = RigidbodyConstraints.None;
+            navMeshAgent.isStopped = false;
         }
     }
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(this.transform.position, targetWindow.transform.position);
-        if (targetCar)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(this.transform.position, targetCar.transform.position);
-
-        }
-        if (targetExit)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(this.transform.position, targetExit.transform.position);
-
-        }
-
-
-    }
 
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 //New as of Feb.25rd
 
 public class ServiceProcess : MonoBehaviour
@@ -54,17 +56,30 @@ public class ServiceProcess : MonoBehaviour
 
         if (other.gameObject.CompareTag("Car"))
         {
-            carInService = other.gameObject;
-            carInService.GetComponent<CarController>().SetInService(true);
+            if (carInService == null)
+            {
+                carInService = other.gameObject;
+                CarController car = other.GetComponent<CarController>();
 
-            //if (queueManager.Count() == 0)
-            //{
-            //    queueManager.Add(carInService);
-            //}
-            
-            generateServices = true;
-            //carController = carInService.GetComponent<CarController>();
-            StartCoroutine(GenerateServices());
+                if (car.carState == CarController.CarState.Entered)
+                {
+                    car.SetInService(true);
+                    car.ChangeState(CarController.CarState.InService);
+                    car.GetComponent<NavMeshAgent>().isStopped = true;
+                    Rigidbody rb = car.GetComponent<Rigidbody>();
+                    rb.constraints = RigidbodyConstraints.FreezeAll;
+                }
+                
+
+                //if (queueManager.Count() == 0)
+                //{
+                //    queueManager.Add(carInService);
+                //}
+                
+                generateServices = true;
+                //carController = carInService.GetComponent<CarController>();
+                StartCoroutine(GenerateServices());
+            }
         }
     }
 
@@ -105,7 +120,7 @@ public class ServiceProcess : MonoBehaviour
 
         }
         carInService.GetComponent<CarController>().ExitService(carExitPlace);
-
+        carInService = null;
     }
     private void OnDrawGizmos()
     {

@@ -58,7 +58,7 @@ public class ArrivalProcess : MonoBehaviour
         interArrivalTimeInSeconds = interArrivalTimeInMinutes * 60;
         StartCoroutine(GenerateArrivals());
 #if DEBUG_AP
-        print("proc#:" + System.Environment.ProcessorCount);
+        //print("proc#:" + System.Environment.ProcessorCount);
         txtDebug.text = "\nproc#:" + System.Environment.ProcessorCount;
 #endif
     }
