@@ -170,14 +170,11 @@ public class CarController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Car"))
         {
-            if (other.gameObject.CompareTag("Car"))
+            if (other.gameObject.GetComponent<NavMeshAgent>().isStopped)
             {
-                if (other.gameObject.GetComponent<NavMeshAgent>().isStopped)
-                {
-                    navMeshAgent.isStopped = true;
-                    Rigidbody rb = GetComponent<Rigidbody>();
-                    rb.constraints = RigidbodyConstraints.FreezeAll;
-                }
+                navMeshAgent.isStopped = true;
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.constraints = RigidbodyConstraints.FreezeAll;
             }
         }
     }

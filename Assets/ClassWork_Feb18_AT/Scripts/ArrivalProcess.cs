@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 //using System;
 //class MyObservable : System.IObservable<float>
@@ -30,6 +32,10 @@ public class ArrivalProcess : MonoBehaviour
     //
     public float minInterArrivalTimeInSeconds = 3; 
     public float maxInterArrivalTimeInSeconds = 60;
+    
+    public Text textNextArrivalIn;
+    public Text timeForNextArrivalRemaining;
+    private float m_TimerForNextArrival = 0;
     //
     public enum ArrivalIntervalTimeStrategy
     {
@@ -42,12 +48,7 @@ public class ArrivalProcess : MonoBehaviour
     public ArrivalIntervalTimeStrategy arrivalIntervalTimeStrategy=ArrivalIntervalTimeStrategy.UniformIntervalTime;
 
     //New as of Feb.25th
-    QueueManager queueManager;
-
-    //UI debugging
-#if DEBUG_AP
-    public Text txtDebug;
-#endif
+    private QueueManager queueManager;
 
     // Start is called before the first frame update
     void Start()
@@ -57,12 +58,15 @@ public class ArrivalProcess : MonoBehaviour
         interArrivalTimeInMinutes = interArrivalTimeInHours * 60;
         interArrivalTimeInSeconds = interArrivalTimeInMinutes * 60;
         StartCoroutine(GenerateArrivals());
-#if DEBUG_AP
-        //print("proc#:" + System.Environment.ProcessorCount);
-        txtDebug.text = "\nproc#:" + System.Environment.ProcessorCount;
-#endif
     }
-   
+
+    private void Update()
+    {
+        
+        m_TimerForNextArrival -= Time.deltaTime;
+        timeForNextArrivalRemaining.text = $"Timer: {m_TimerForNextArrival:F2}s";
+    }
+
     IEnumerator GenerateArrivals()
     {
         while (generateArrivals)
@@ -77,6 +81,7 @@ public class ArrivalProcess : MonoBehaviour
             switch (arrivalIntervalTimeStrategy)
             {
                 case ArrivalIntervalTimeStrategy.ConstantIntervalTime:
+                    //timeToNextArrivalInSec = 2;
                     timeToNextArrivalInSec= interArrivalTimeInSeconds;
                     break;
                 case ArrivalIntervalTimeStrategy.UniformIntervalTime:
@@ -98,6 +103,8 @@ public class ArrivalProcess : MonoBehaviour
 
             //New as of Feb.23rd
             //float timeToNextArrivalInSec = Random.Range(minInterArrivalTimeInSeconds,maxInterArrivalTimeInSeconds);
+            textNextArrivalIn.text = $"Time to next Arrival in Sec is -> {timeToNextArrivalInSec:F2}";
+            m_TimerForNextArrival = timeToNextArrivalInSec;
             yield return new WaitForSeconds(timeToNextArrivalInSec);
 
             //yield return new WaitForSeconds(interArrivalTimeInSeconds);
