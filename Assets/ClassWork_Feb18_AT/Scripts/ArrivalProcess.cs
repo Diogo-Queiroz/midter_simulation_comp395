@@ -64,7 +64,7 @@ public class ArrivalProcess : MonoBehaviour
     {
         
         m_TimerForNextArrival -= Time.deltaTime;
-        timeForNextArrivalRemaining.text = $"Timer: {m_TimerForNextArrival:F2}s";
+        //timeForNextArrivalRemaining.text = $"Timer: {m_TimerForNextArrival:F2}s";
     }
 
     IEnumerator GenerateArrivals()
@@ -103,7 +103,7 @@ public class ArrivalProcess : MonoBehaviour
 
             //New as of Feb.23rd
             //float timeToNextArrivalInSec = Random.Range(minInterArrivalTimeInSeconds,maxInterArrivalTimeInSeconds);
-            textNextArrivalIn.text = $"Time to next Arrival in Sec is -> {timeToNextArrivalInSec:F2}";
+            //textNextArrivalIn.text = $"Time to next Arrival in Sec is -> {timeToNextArrivalInSec:F2}";
             m_TimerForNextArrival = timeToNextArrivalInSec;
             yield return new WaitForSeconds(timeToNextArrivalInSec);
 

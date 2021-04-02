@@ -32,11 +32,11 @@ public class ServiceProcess : MonoBehaviour
     //New as Feb.25th
     //CarController carController;
     QueueManager queueManager; //=new QueueManager();
-    
+
     // UI Texts
-    public Text serviceStrategy;
-    public Text serviceIntervalTime;
-    public Text serviceIntervalTimeRemaining;
+    //public Text serviceStrategy;
+    //public Text serviceIntervalTime;
+    //public Text serviceIntervalTimeRemaining;
     private float m_TimerForNextService;
 
     public enum ServiceIntervalTimeStrategy
@@ -52,7 +52,7 @@ public class ServiceProcess : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        serviceStrategy.text = $"Service Strategy = {serviceIntervalTimeStrategy.ToString()}";
+        //serviceStrategy.text = $"Service Strategy = {serviceIntervalTimeStrategy.ToString()}";
         interServiceTimeInHours = 1.0f / serviceRateAsCarsPerHour;
         interServiceTimeInMinutes = interServiceTimeInHours * 60;
         interServiceTimeInSeconds = interServiceTimeInMinutes * 60;
@@ -65,7 +65,7 @@ public class ServiceProcess : MonoBehaviour
     {
         
         m_TimerForNextService -= Time.deltaTime;
-        serviceIntervalTimeRemaining.text = $"Timer: {m_TimerForNextService:F2}s";
+        //serviceIntervalTimeRemaining.text = $"Timer: {m_TimerForNextService:F2}s";
     }
 
     private void OnTriggerEnter(Collider other)
@@ -133,7 +133,7 @@ public class ServiceProcess : MonoBehaviour
             //New as of Feb.23rd
             //float timeToNextServiceInSec = Random.Range(minInterServiceTimeInSeconds,maxInterServiceTimeInSeconds);
             generateServices = false;
-            serviceIntervalTime.text = $"Time to next Service in Sec > {timeToNextServiceInSec:F2}";
+            //serviceIntervalTime.text = $"Time to next Service in Sec > {timeToNextServiceInSec:F2}";
             m_TimerForNextService = timeToNextServiceInSec;
             yield return new WaitForSeconds(timeToNextServiceInSec);
 

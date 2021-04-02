@@ -16,6 +16,8 @@ public class CarController : MonoBehaviour
     public bool InService { get; set; }
     public GameObject driveThruWindow;
     public QueueManager queueManager;
+    private GameObject GameController;
+    private GameController gameController;
 
     [SerializeField] private Transform carFront;
     private int m_IntLayer;
@@ -41,7 +43,9 @@ public class CarController : MonoBehaviour
         driveThruWindow = GameObject.FindGameObjectWithTag("DriveThruWindow");
         targetWindow = driveThruWindow.transform;
         targetExit = GameObject.FindGameObjectWithTag("CarExit").transform;
+        this.GameController = GameObject.FindGameObjectWithTag("GameController");
         navMeshAgent = GetComponent<NavMeshAgent>();
+        gameController = GameController.GetComponent<GameController>();
 
         //
         carState = CarState.Entered;
