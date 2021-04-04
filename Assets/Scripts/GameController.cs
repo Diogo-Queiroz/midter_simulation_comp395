@@ -23,20 +23,20 @@ public class GameController : MonoBehaviour
 
     //Menu Items
     //sub-categoty
-    private List<string> subCategoryDrinks;
-    private List<string> subCategoryFood;
-    private List<string> subCategoryDesert;
+    public List<string> subCategoryDrinks;
+    public List<string> subCategoryFood;
+    public List<string> subCategoryDesert;
     //food 
-    private List<string> itemHotDrinks;
-    private List<string> itemColdDrinks;
-    private List<string> itemBurgers;
-    private List<string> itemWraps;
-    private List<string> itemBagels;
-    private List<string> itemMuffins;
-    private List<string> itemDonuts;
-    private List<string> itemIceCreams;
+    public List<string> itemHotDrinks;
+    public List<string> itemColdDrinks;
+    public List<string> itemBurgers;
+    public List<string> itemWraps;
+    public List<string> itemBagels;
+    public List<string> itemMuffins;
+    public List<string> itemDonuts;
+    public List<string> itemIceCreams;
 
-    private List<string> tray;
+    public List<string> tray;
     private int currentTrayItemNumber;
 
     private int currentCategory = 0;
@@ -53,7 +53,6 @@ public class GameController : MonoBehaviour
     {
         score = 0;
         life = 3;
-        currentTrayItemNumber = 0;
         populateSubCategoryDrinkList();
         populateSubCategoryFoodList();
         populateSubCategoryDesertList();
@@ -65,6 +64,7 @@ public class GameController : MonoBehaviour
         populateMuffins();
         populateDonuts();
         populateIceCreams();
+        currentTrayItemNumber = 0;
     }
 
     public void receiveOrder(int oType,float oTime)
@@ -303,6 +303,10 @@ public class GameController : MonoBehaviour
 
     void addLastTrayItem()
     {
+        //Debug.Log(tray[tray.Count - 1].ToString());
+        trayTexts[currentTrayItemNumber].text  = tray[tray.Count - 1].ToString();
+        trayTexts[currentTrayItemNumber].gameObject.SetActive(true);
+        currentTrayItemNumber++;
 
     }
     // Update is called once per frame
