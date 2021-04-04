@@ -19,7 +19,7 @@ public class ArrivalProcess : MonoBehaviour
     public GameObject carPrefab;
     public Transform carSpawnPlace;
 
-    public float arrivalRateAsCarsPerHour = 20; // car/hour
+    public float arrivalRateAsCarsPerHour = 50; // car/hour
     public float interArrivalTimeInHours; // = 1.0 / arrivalRateAsCarsPerHour;
     private float interArrivalTimeInMinutes;
     private float interArrivalTimeInSeconds;
@@ -64,6 +64,7 @@ public class ArrivalProcess : MonoBehaviour
     {
         
         m_TimerForNextArrival -= Time.deltaTime;
+        //Debug.Log(interArrivalTimeInSeconds);
         //timeForNextArrivalRemaining.text = $"Timer: {m_TimerForNextArrival:F2}s";
     }
 

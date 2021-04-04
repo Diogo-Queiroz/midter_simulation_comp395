@@ -4,22 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public enum OrderType
-    {
-        SmallOrder,
-        MediumOrder,
-        LargeOrder
-    }
-
     public TMP_Dropdown categoryDropdown;
     public TMP_Dropdown subCategoryDropdown;
     public TMP_Dropdown itemDropdown;
     public Button makeItem;
     public TMP_Text freezTimerText;
+    public TMP_Text timerText;
+    public TMP_Text scoreText;
     public TMP_Text[] trayTexts;
+    public TMP_Text[] orderTexts;
+    public GameObject[] lifeSprite;
+    public GameObject ServicePros;
+    private ServiceProcess serviceProcess;
 
     //Menu Items
     //sub-categoty
@@ -37,18 +38,19 @@ public class GameController : MonoBehaviour
     public List<string> itemIceCreams;
 
     public List<string> tray;
+    public List<string> customerOrder;
     private int currentTrayItemNumber;
 
     private int currentCategory = 0;
 
     bool isMenuFreez;
     float freezTimer;
-
-    OrderType orderType = OrderType.SmallOrder;
+    bool isMenuTimer;
     private float timer;
     private int score;
     private int life;
     private float orderTime;
+    private int orderType = 0;
     void Start()
     {
         score = 0;
@@ -65,19 +67,256 @@ public class GameController : MonoBehaviour
         populateDonuts();
         populateIceCreams();
         currentTrayItemNumber = 0;
+        serviceProcess = ServicePros.GetComponent<ServiceProcess>();
     }
 
     public void receiveOrder(int oType,float oTime)
     {
-
+        int temp1, temp2, temp3;
+        timer = oTime * 60f;
+        orderType = oType;
+        Debug.Log("Timer:" + timer);
+        if (oType == 1)
+        {
+            temp1 = Random.Range(1, 3);
+            if(temp1 == 1)
+            {
+                temp2 = Random.Range(1, 3);
+                if(temp2 == 1)
+                {
+                    temp3 = Random.Range(1, itemHotDrinks.Count);
+                    customerOrder.Add(itemHotDrinks[temp3].ToString());
+                }
+                else
+                {
+                    temp3 = Random.Range(1, itemColdDrinks.Count);
+                    customerOrder.Add(itemColdDrinks[temp3].ToString());
+                }
+            }
+            else
+            {
+                temp2 = Random.Range(1, 4);
+                if (temp2 == 1)
+                {
+                    temp3 = Random.Range(1, itemMuffins.Count);
+                    customerOrder.Add(itemMuffins[temp3].ToString());
+                }
+                else if(temp2 == 2)
+                {
+                    temp3 = Random.Range(1, itemDonuts.Count);
+                    customerOrder.Add(itemDonuts[temp3].ToString());
+                }
+                else
+                {
+                    temp3 = Random.Range(1, itemIceCreams.Count);
+                    customerOrder.Add(itemIceCreams[temp3].ToString());
+                }
+            }
+        }
+        else if(oType == 2)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                temp1 = Random.Range(1, 4);
+                if (temp1 == 1)
+                {
+                    temp2 = Random.Range(1, 3);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemHotDrinks.Count);
+                        customerOrder.Add(itemHotDrinks[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemColdDrinks.Count);
+                        customerOrder.Add(itemColdDrinks[temp3].ToString());
+                    }
+                }
+                else if (temp1 == 2)
+                {
+                    temp2 = Random.Range(1, 4);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemBurgers.Count);
+                        customerOrder.Add(itemBurgers[temp3].ToString());
+                    }
+                    else if (temp2 == 2)
+                    {
+                        temp3 = Random.Range(1, itemWraps.Count);
+                        customerOrder.Add(itemWraps[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemBagels.Count);
+                        customerOrder.Add(itemBagels[temp3].ToString());
+                    }
+                }
+                else
+                {
+                    temp2 = Random.Range(1, 4);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemMuffins.Count);
+                        customerOrder.Add(itemMuffins[temp3].ToString());
+                    }
+                    else if (temp2 == 2)
+                    {
+                        temp3 = Random.Range(1, itemDonuts.Count);
+                        customerOrder.Add(itemDonuts[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemIceCreams.Count);
+                        customerOrder.Add(itemIceCreams[temp3].ToString());
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                temp1 = Random.Range(1, 4);
+                if (temp1 == 1)
+                {
+                    temp2 = Random.Range(1, 3);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemHotDrinks.Count);
+                        customerOrder.Add(itemHotDrinks[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemColdDrinks.Count);
+                        customerOrder.Add(itemColdDrinks[temp3].ToString());
+                    }
+                }
+                else if (temp1 == 2)
+                {
+                    temp2 = Random.Range(1, 4);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemBurgers.Count);
+                        customerOrder.Add(itemBurgers[temp3].ToString());
+                    }
+                    else if (temp2 == 2)
+                    {
+                        temp3 = Random.Range(1, itemWraps.Count);
+                        customerOrder.Add(itemWraps[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemBagels.Count);
+                        customerOrder.Add(itemBagels[temp3].ToString());
+                    }
+                }
+                else
+                {
+                    temp2 = Random.Range(1, 4);
+                    if (temp2 == 1)
+                    {
+                        temp3 = Random.Range(1, itemMuffins.Count);
+                        customerOrder.Add(itemMuffins[temp3].ToString());
+                    }
+                    else if (temp2 == 2)
+                    {
+                        temp3 = Random.Range(1, itemDonuts.Count);
+                        customerOrder.Add(itemDonuts[temp3].ToString());
+                    }
+                    else
+                    {
+                        temp3 = Random.Range(1, itemIceCreams.Count);
+                        customerOrder.Add(itemIceCreams[temp3].ToString());
+                    }
+                }
+            }
+        }
+        showCustomerOrder();
+        isMenuTimer = true;
     }
+
+    public void showCustomerOrder()
+    {
+        for(int i= 0; i < customerOrder.Count; i++)
+        {
+            orderTexts[i].text = customerOrder[i].ToString();
+            orderTexts[i].gameObject.SetActive(true);
+        }
+    }
+    public void resetCustomerOrder()
+    {
+        for (int i = 0; i < customerOrder.Count; i++)
+        {
+            orderTexts[i].gameObject.SetActive(false);
+        }
+        customerOrder.Clear();
+    } 
+
     public void finishOrder()
     {
-
+        bool isError = false;
+        foreach(string item in customerOrder)
+        {
+            if (!tray.Contains(item))
+            {
+                isError = true;
+            }
+        }
+        if (isError)
+        {
+            removeLife();
+        }
+        else
+        {
+            if(orderType == 1)
+            {
+                addScore(30);
+            }
+            else if(orderType == 2)
+            {
+                addScore(50);
+            }
+            else
+            {
+                addScore(100);
+            }
+        }
+        resetTray();
+        resetCustomerOrder();
+        resetTimers();
+        serviceProcess.exitCar();
     }
-    public void generateOrder()
+    public void resetTimers()
     {
-
+        freezTimer = 0;
+        timer = 0;
+        isMenuFreez = false;
+        isMenuTimer = false;
+        timerText.text = "Timer:00:00";
+        freezTimerText.gameObject.SetActive(false);
+    }
+    public void addScore(int s)
+    {
+        score += s;
+        scoreText.text = "Score: " + score;
+    }
+    public void removeLife()
+    {
+        if(life == 3)
+        {
+            life--;
+            lifeSprite[2].SetActive(false);
+        }
+        else if(life == 2)
+        {
+            life--;
+            lifeSprite[1].SetActive(false);
+        }
+        else
+        {
+            life--;
+            lifeSprite[0].SetActive(false);
+        }
     }
     public void addToTray()
     {   
@@ -293,7 +532,7 @@ public class GameController : MonoBehaviour
 
     public void freezeControlsToggle(bool toggle)
     {
-        Debug.Log("Toggle");
+        //Debug.Log("Toggle");
         categoryDropdown.interactable = toggle;
         subCategoryDropdown.interactable = toggle;
         itemDropdown.interactable = toggle;
@@ -330,12 +569,37 @@ public class GameController : MonoBehaviour
             freezTimerText.text = "Preparing Item:" + seconds.ToString("00") + ":" + miliSec.ToString("00");
             freezTimer--;
         }
+
+        if (isMenuTimer)
+        {
+            int seconds = Convert.ToInt32(timer) / 60;
+            int miliSec = Convert.ToInt32(timer) % 60;
+            if(timer<= 0f)
+            {
+                isMenuTimer = false;
+                finishOrder();
+                resetCustomerOrder();
+                resetTray();
+            }
+            timerText.text = "Time: " + seconds.ToString("00") + ":" + miliSec.ToString("00");
+            timer--;
+        }
+    }
+
+    public void resetTray()
+    {
+        for(int i=0;i<5;i++)
+        {
+            trayTexts[i].gameObject.SetActive(false);
+        }
+        currentTrayItemNumber = 0;
+        tray.Clear();
     }
     public void checkIsLost()
     {
         if(life <= 0)
         {
-            // Player Lost
+            SceneManager.LoadScene(2);
         }
     }
 }

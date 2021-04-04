@@ -19,6 +19,9 @@ public class ServiceProcess : MonoBehaviour
     private float interServiceTimeInMinutes;
     private float interServiceTimeInSeconds;
 
+    private GameObject GameController;
+    private GameController gameController;
+
     //public float ServiceRateAsCarsPerHour = 20; // car/hour
     public bool generateServices = false;
 
@@ -38,6 +41,8 @@ public class ServiceProcess : MonoBehaviour
     //public Text serviceIntervalTime;
     //public Text serviceIntervalTimeRemaining;
     private float m_TimerForNextService;
+
+    private int orderType;
 
     public enum ServiceIntervalTimeStrategy
     {
@@ -59,11 +64,13 @@ public class ServiceProcess : MonoBehaviour
         //queueManager = this.GetComponent<QueueManager>();
         //queueManager = new QueueManager();
         //StartCoroutine(GenerateServices());
+
+        this.GameController = GameObject.FindGameObjectWithTag("GameController");
+        gameController = GameController.GetComponent<GameController>();
     }
 
     private void Update()
     {
-        
         m_TimerForNextService -= Time.deltaTime;
         //serviceIntervalTimeRemaining.text = $"Timer: {m_TimerForNextService:F2}s";
     }
@@ -81,6 +88,20 @@ public class ServiceProcess : MonoBehaviour
 
                 if (car.carState == CarController.CarState.Entered)
                 {
+                    orderType = Random.Range(1, 4);
+                    if (orderType == 1)
+                    {
+                        interServiceTimeInSeconds = 30f;
+                    }
+                    else if (orderType == 2)
+                    {
+                        interServiceTimeInSeconds = 40f;
+                    }
+                    else
+                    {
+                        interServiceTimeInSeconds = 60f;
+                    }
+                    gameController.receiveOrder(orderType, interServiceTimeInSeconds);
                     car.SetInService(true);
                     car.ChangeState(CarController.CarState.InService);
                     car.GetComponent<NavMeshAgent>().isStopped = true;
@@ -96,22 +117,25 @@ public class ServiceProcess : MonoBehaviour
                 
                 generateServices = true;
                 //carController = carInService.GetComponent<CarController>();
-                StartCoroutine(GenerateServices());
+                GenerateServices();
             }
         }
     }
 
-    IEnumerator GenerateServices()
+    public void GenerateServices()
     {
         while (generateServices)
         {
             //Instantiate(carPrefab, carSpawnPlace.position, Quaternion.identity);
+            if (orderType == 3)
+            {
+                interServiceTimeInSeconds += 3;
+            }
             float timeToNextServiceInSec = interServiceTimeInSeconds;
             switch (serviceIntervalTimeStrategy)
             {
                 case ServiceIntervalTimeStrategy.ConstantIntervalTime:
-                    //timeToNextServiceInSec = 1;
-                    timeToNextServiceInSec = interServiceTimeInSeconds;
+                    timeToNextServiceInSec = interServiceTimeInSeconds + 7f;
                     break;
                 case ServiceIntervalTimeStrategy.UniformIntervalTime:
                     timeToNextServiceInSec = Random.Range(minInterServiceTimeInSeconds, maxInterServiceTimeInSeconds);
@@ -135,11 +159,13 @@ public class ServiceProcess : MonoBehaviour
             generateServices = false;
             //serviceIntervalTime.text = $"Time to next Service in Sec > {timeToNextServiceInSec:F2}";
             m_TimerForNextService = timeToNextServiceInSec;
-            yield return new WaitForSeconds(timeToNextServiceInSec);
 
             //yield return new WaitForSeconds(interServiceTimeInSeconds);
 
         }
+    }
+    public void exitCar()
+    {
         carInService.GetComponent<CarController>().ExitService(carExitPlace);
         carInService = null;
     }
