@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public TMP_Dropdown subCategoryDropdown;
     public TMP_Dropdown itemDropdown;
     public Button makeItem;
+    public Button finishOrderButton;
     public TMP_Text freezTimerText;
     public TMP_Text timerText;
     public TMP_Text scoreText;
@@ -68,10 +69,12 @@ public class GameController : MonoBehaviour
         populateIceCreams();
         currentTrayItemNumber = 0;
         serviceProcess = ServicePros.GetComponent<ServiceProcess>();
+        finishOrderButton.interactable = false;
     }
 
     public void receiveOrder(int oType,float oTime)
     {
+        finishOrderButton.interactable = true;
         int temp1, temp2, temp3;
         timer = oTime * 60f;
         orderType = oType;
@@ -290,10 +293,15 @@ public class GameController : MonoBehaviour
     {
         freezTimer = 0;
         timer = 0;
+        if (isMenuFreez)
+        {
+            freezeControlsToggle(true);
+        }
         isMenuFreez = false;
         isMenuTimer = false;
         timerText.text = "Timer:00:00";
         freezTimerText.gameObject.SetActive(false);
+        finishOrderButton.interactable = false;
     }
     public void addScore(int s)
     {

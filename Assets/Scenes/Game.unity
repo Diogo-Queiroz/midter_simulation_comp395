@@ -4207,6 +4207,7 @@ MonoBehaviour:
   subCategoryDropdown: {fileID: 626740}
   itemDropdown: {fileID: 584400241}
   makeItem: {fileID: 267012337}
+  finishOrderButton: {fileID: 563648238}
   freezTimerText: {fileID: 1001027444}
   timerText: {fileID: 1827025314}
   scoreText: {fileID: 2144332014}
