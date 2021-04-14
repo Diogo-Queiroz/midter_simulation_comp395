@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     public GameObject[] orderSprites;
     public GameObject[] traySprites;
     public GameObject ServicePros;
+    public AudioClip clip;
     private ServiceProcess serviceProcess;
 
     //Menu Items
@@ -490,6 +491,7 @@ public class GameController : MonoBehaviour
                 addScore(100);
             }
         }
+        AudioSource.PlayClipAtPoint(clip, new Vector3(1.884f, 0.87f, 20f));
         resetTray();
         resetCustomerOrder();
         resetTimers();
