@@ -4374,6 +4374,9 @@ MonoBehaviour:
   - {fileID: 102771499}
   ServicePros: {fileID: 1349315581}
   clip: {fileID: 8300000, guid: 98339e89bf899eb47a94e5dbdccc8f46, type: 3}
+  AddToTray: {fileID: 8300000, guid: 4589555997b348b45aa19abdc0146421, type: 3}
+  RightOrder: {fileID: 8300000, guid: de6dd4b3f4862bf4f8268d042e3b9f95, type: 3}
+  WrongOrder: {fileID: 8300000, guid: 42ffda12716f771409668deec7b0022e, type: 3}
   tray: []
   customerOrder: []
 --- !u!4 &473569742

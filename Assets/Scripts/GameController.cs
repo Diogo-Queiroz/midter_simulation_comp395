@@ -24,6 +24,9 @@ public class GameController : MonoBehaviour
     public GameObject[] traySprites;
     public GameObject ServicePros;
     public AudioClip clip;
+    public AudioClip AddToTray;
+    public AudioClip RightOrder;
+    public AudioClip WrongOrder;
     private ServiceProcess serviceProcess;
 
     //Menu Items
@@ -93,6 +96,8 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("Null Sprite");
         }
+        categoryDropdown.value = 1;
+        categoryDropdown.value = 0;
     }
 
     public void receiveOrder(int oType,float oTime)
@@ -474,11 +479,13 @@ public class GameController : MonoBehaviour
         }
         if (isError)
         {
+            AudioSource.PlayClipAtPoint(WrongOrder, new Vector3(1.884f, 0.87f, 20f));
             removeLife();
         }
         else
         {
-            if(orderType == 1)
+            AudioSource.PlayClipAtPoint(RightOrder, new Vector3(1.884f, 0.87f, 20f));
+            if (orderType == 1)
             {
                 addScore(30);
             }
@@ -711,6 +718,9 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        itemDropdown.value = 1;
+        itemDropdown.value = 0;
+
     }
     public void populateSubCategory(int val)
     {
@@ -743,7 +753,9 @@ public class GameController : MonoBehaviour
                 //subCategoryDropdown.ClearOptions();
                 break;
         }
-        
+        subCategoryDropdown.value = 1;
+        subCategoryDropdown.value = 0;
+
     }
 
     public void freezeControlsToggle(bool toggle)
@@ -764,6 +776,7 @@ public class GameController : MonoBehaviour
         traySprites[currentTrayItemNumber].SetActive(true);
         trayTexts[currentTrayItemNumber].gameObject.SetActive(true);
         currentTrayItemNumber++;
+        AudioSource.PlayClipAtPoint(AddToTray, new Vector3(1.884f, 0.87f, 20f));
 
     }
     // Update is called once per frame
