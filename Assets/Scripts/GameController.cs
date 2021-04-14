@@ -20,30 +20,31 @@ public class GameController : MonoBehaviour
     public TMP_Text[] trayTexts;
     public TMP_Text[] orderTexts;
     public GameObject[] lifeSprite;
+    public GameObject[] orderSprites;
+    public GameObject[] traySprites;
     public GameObject ServicePros;
     private ServiceProcess serviceProcess;
 
     //Menu Items
     //sub-categoty
-    public List<string> subCategoryDrinks;
-    public List<string> subCategoryFood;
-    public List<string> subCategoryDesert;
+    private List<string> subCategoryDrinks;
+    private List<string> subCategoryFood;
+    private List<string> subCategoryDesert;
     //food 
-    public List<string> itemHotDrinks;
-    public List<string> itemColdDrinks;
-    public List<string> itemBurgers;
-    public List<string> itemWraps;
-    public List<string> itemBagels;
-    public List<string> itemMuffins;
-    public List<string> itemDonuts;
-    public List<string> itemIceCreams;
+    private List<string> itemHotDrinks;
+    private List<string> itemColdDrinks;
+    private List<string> itemBurgers;
+    private List<string> itemWraps;
+    private List<string> itemBagels;
+    private List<string> itemMuffins;
+    private List<string> itemDonuts;
+    private List<string> itemIceCreams;
 
     public List<string> tray;
     public List<string> customerOrder;
     private int currentTrayItemNumber;
 
     private int currentCategory = 0;
-
     bool isMenuFreez;
     float freezTimer;
     bool isMenuTimer;
@@ -56,6 +57,21 @@ public class GameController : MonoBehaviour
     {
         score = 0;
         life = 3;
+        currentTrayItemNumber = 0;
+        serviceProcess = ServicePros.GetComponent<ServiceProcess>();
+        finishOrderButton.interactable = false;
+
+        subCategoryDrinks = new List<string>();
+        subCategoryFood = new List<string>();
+        subCategoryDesert = new List<string>();
+        itemHotDrinks = new List<string>();
+        itemColdDrinks = new List<string>();
+        itemBurgers = new List<string>();
+        itemWraps = new List<string>();
+        itemBagels = new List<string>();
+        itemMuffins = new List<string>();
+        itemDonuts = new List<string>();
+        itemIceCreams = new List<string>();
         populateSubCategoryDrinkList();
         populateSubCategoryFoodList();
         populateSubCategoryDesertList();
@@ -67,9 +83,15 @@ public class GameController : MonoBehaviour
         populateMuffins();
         populateDonuts();
         populateIceCreams();
-        currentTrayItemNumber = 0;
-        serviceProcess = ServicePros.GetComponent<ServiceProcess>();
-        finishOrderButton.interactable = false;
+        Sprite temp = loadSpriteByName("Black Coffee");
+        if (temp != null)
+        {
+            traySprites[0].GetComponent<Image>().sprite = temp;
+        }
+        else
+        {
+            Debug.Log("Null Sprite");
+        }
     }
 
     public void receiveOrder(int oType,float oTime)
@@ -238,12 +260,195 @@ public class GameController : MonoBehaviour
         isMenuTimer = true;
     }
 
+    public Sprite loadSpriteByName(string itemName)
+    {
+        Sprite sprite = null;
+        if (itemName == "Black Coffee")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/BlackCoffee");
+        }
+        else if(itemName == "White Coffee")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/WhiteCoffee");
+        }
+        else if (itemName == "Hot Chocolate")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/HotChocolate");
+        }
+        else if (itemName == "French Vanilla")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/FrenchVanilla");
+        }
+        else if (itemName == "Steeped Tea")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/SteepedTea");
+        }
+        else if (itemName == "Green Tea")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Hot Drinks/GreenTea");
+        }
+        else if (itemName == "Cold Coffee")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/ColdCoffee");
+        }
+        else if (itemName == "Iced Coffee")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/IcedCoffee");
+        }
+        else if (itemName == "Iced Cap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/IcedCap");
+        }
+        else if (itemName == "Creamy Chills")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/CreamyChills");
+        }
+        else if (itemName == "Lemonade")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/Lemonade");
+        }
+        else if (itemName == "Coke")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/Coke");
+        }
+        else if (itemName == "Diet-Coke")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/DietCoke");
+        }
+        else if (itemName == "Coke-Zero")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/CokeZero");
+        }
+        else if (itemName == "Pepsi")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Cold Drinks/Pepsi");
+        }
+        else if (itemName == "Big Mac")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/BigMac");
+        }
+        else if (itemName == "Cheese Burger")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/CheeseBurger");
+        }
+        else if (itemName == "Chicken Burger")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/ChickenBurger");
+        }
+        else if (itemName == "Spicy Chicken Burger")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/SpicyChickenBurger");
+        }
+        else if (itemName == "Fish Burger")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/FishBurger");
+        }
+        else if (itemName == "Junior Chicken Burger")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Burgers/JuniorChickenBurger");
+        }
+        else if (itemName == "Farmer's Wrap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Wraps/FarmersWrap");
+        }
+        else if (itemName == "Farmer's Breakfast Wrap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Wraps/FarmersBreakfastWrap");
+        }
+        else if (itemName == "Spicy Chicken Wrap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Wraps/SpicyChickenWrap");
+        }
+        else if (itemName == "Crispy Chicken Wrap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Wraps/CrispyChickenWrap");
+        }
+        else if (itemName == "Chedder Chicken Wrap")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Wraps/ChedderChickenWrap");
+        }
+        else if (itemName == "Plain Bagel")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Bagels/PlainBagel");
+        }
+        else if (itemName == "Everything Bagel")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Bagels/EverythingBagel");
+        }
+        else if (itemName == "Four-Cheese Bagel")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Bagels/FourCheeseBagel");
+        }
+        else if (itemName == "Jalapeno Bagel")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Bagels/JalapenoBagel");
+        }
+        else if (itemName == "12 Grain Bagel")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Bagels/12GrainBagel");
+        }
+        else if (itemName == "Choclate-Chip Muffins")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Muffines/ChoclateChipMuffine");
+        }
+        else if (itemName == "Blueberry Muffins")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Muffines/BlueberryMuffine");
+        }
+        else if (itemName == "Raisin Bran Muffins")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Muffines/RaisinBranMuffin");
+        }
+        else if (itemName == "Fruit Muffins")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Muffines/FruitMuffin");
+        }
+        else if (itemName == "Chocolate Dip Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/ChoclateDipDonut");
+        }
+        else if (itemName == "Vanilla Dip Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/VanillaDipDonut");
+        }
+        else if (itemName == "Honey Dip Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/HoneyDipDonut");
+        }
+        else if (itemName == "Sugar Loop Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/SugarLoopDonut");
+        }
+        else if (itemName == "Maple Dip Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/MapleDipDonut");
+        }
+        else if (itemName == "Double Chocolate Donut")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Donut/DoubleChoclateDonut");
+        }
+        else if (itemName == "Chocolate Softy")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Ice Cream/ChocolateIceCream");
+        }
+        else if (itemName == "Strawberry Softy")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Ice Cream/StrawberryIceCream");
+        }
+        else if (itemName == "Vanilla Softy")
+        {
+            sprite = Resources.Load<Sprite>("Sprites/Ice Cream/VanillaIceCream");
+        }
+        return sprite;
+    }
     public void showCustomerOrder()
     {
         for(int i= 0; i < customerOrder.Count; i++)
         {
             orderTexts[i].text = customerOrder[i].ToString();
+            orderSprites[i].GetComponent<Image>().sprite = loadSpriteByName(customerOrder[i].ToString());
             orderTexts[i].gameObject.SetActive(true);
+            orderSprites[i].SetActive(true);
         }
     }
     public void resetCustomerOrder()
@@ -251,6 +456,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < customerOrder.Count; i++)
         {
             orderTexts[i].gameObject.SetActive(false);
+            orderSprites[i].SetActive(false);
         }
         customerOrder.Clear();
     } 
@@ -552,6 +758,8 @@ public class GameController : MonoBehaviour
     {
         //Debug.Log(tray[tray.Count - 1].ToString());
         trayTexts[currentTrayItemNumber].text  = tray[tray.Count - 1].ToString();
+        traySprites[currentTrayItemNumber].GetComponent<Image>().sprite = loadSpriteByName(tray[tray.Count - 1].ToString());
+        traySprites[currentTrayItemNumber].SetActive(true);
         trayTexts[currentTrayItemNumber].gameObject.SetActive(true);
         currentTrayItemNumber++;
 
@@ -599,6 +807,7 @@ public class GameController : MonoBehaviour
         for(int i=0;i<5;i++)
         {
             trayTexts[i].gameObject.SetActive(false);
+            traySprites[i].SetActive(false);
         }
         currentTrayItemNumber = 0;
         tray.Clear();
